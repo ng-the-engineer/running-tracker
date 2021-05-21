@@ -22,7 +22,7 @@ function success(position) {
   autoDetectResult.textContent += `\n ${(new Date(Date.now())).toISOString()}: ${latitude},${longitude}` ;
 }
 
-function error() {
-  console.log('err')
-  autoDetectResult.textContent = 'Unable to retrieve your location';
+function error(err) {
+  console.log('err: ', err)
+  autoDetectResult.textContent = 'Unable to retrieve your location ' + err;
 }
