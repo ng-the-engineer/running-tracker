@@ -2,8 +2,8 @@ const autoDetectResult = document.querySelector('#auto-detect-result');
 
 const options = {
   enableHighAccuracy: false,
-  maximumAge: 0,
-  timeout: 0
+  maximumAge: 2000,
+  timeout: 1000
 };
 
 if(!navigator.geolocation) {
