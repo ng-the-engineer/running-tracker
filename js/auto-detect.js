@@ -19,13 +19,11 @@ function success(position) {
   const latitude  = position.coords.latitude;
   const longitude = position.coords.longitude;
 
-  autoDetectResult.textContent += `\n ${(new Date(Date.now())).toISOString()}: ${latitude},${longitude}` ;
+  autoDetectResult.textContent += `\n ${(new Date(Date.now())).toISOString()}:  ${latitude},  ${longitude}` ;
 }
 
 function error(err) {
-  // console.log('err: ', JSON.stringify(err, null, 2))
   console.log(typeof err);
   console.log(err)
-  // autoDetectResult.textContent = 'Unable to retrieve your location! ' + JSON.stringify(err, null, 2);
   autoDetectResult.textContent = `Unable to retrieve your location! ${err.code} - ${err.message}`  ;
 }
