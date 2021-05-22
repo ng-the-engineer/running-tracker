@@ -24,7 +24,8 @@ function success(position) {
 
 function error(err) {
   // console.log('err: ', JSON.stringify(err, null, 2))
-  console.log(err.toString());
+  console.log(typeof err);
+  console.log(err)
   // autoDetectResult.textContent = 'Unable to retrieve your location! ' + JSON.stringify(err, null, 2);
-  autoDetectResult.textContent = 'Unable to retrieve your location! ' + err.toString();
+  autoDetectResult.textContent = `Unable to retrieve your location! ${err.code} - ${err.message}`  ;
 }
