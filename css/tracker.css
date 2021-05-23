@@ -1,0 +1,23 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+html,
+body,
+#tracker {
+  height: 90%;
+  width: 100vw;
+}
+
+.center-container {
+  height: 10%;
+  width: 100vw;
+}
+
+.message-console {
+  position: absolute;
+  height: 200px;
+  width: 100%;
+  background-color: #535c68;
+  color: #fff;
+}
