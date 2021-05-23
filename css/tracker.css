@@ -5,13 +5,36 @@ body {
 html,
 body,
 #tracker {
-  height: 90%;
+  height: 85%;
   width: 100vw;
 }
 
 .center-container {
   height: 10%;
   width: 100vw;
+}
+
+.center-buttons {
+  text-align: center;
+  height: 30px;
+}
+
+.button {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  border: gray;
+  color: #fff;
+  /* cursor: pointer; */
+  font-weight: bold;
+}
+
+.button.start {
+  background-color: #4cd137;
+}
+
+.button.stop {
+  background-color: #e8562a;
 }
 
 .message-console {

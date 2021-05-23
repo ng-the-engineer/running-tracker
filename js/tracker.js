@@ -1,8 +1,4 @@
-const latLngHarrow = [51.58066, -0.33780];
-
-let map = L.map("tracker").setView(latLngHarrow, 15);
-
-
+let map = L.map("tracker").setView([51.505, -0.09], 13); // London center
 
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -20,20 +16,13 @@ L.tileLayer(
 
 
 // Init lines
-const latlngs = [
+let path = L.polyline([
   [51.58091697930333,  -0.3427139735019594],
-  [51.58091752060129,  -0.3427032079732662],
-  [51.580917710795674,  -0.34270147246117333],
-  [51.58100480796873,  -0.3426585760509962],
-  [51.58120191759339,  -0.34271381111195026],
-]
-let path = L.polyline(latlngs, {
+  // [51.58086428128717,  -0.3427745343867612]
+], {
   color: 'red', 
   bubblingMouseEvents: true
 }).addTo(map);
-
-// zoom the map to the polyline
-map.fitBounds(path.getBounds());
 
 
 // ----------------------------------------------------------------
@@ -46,11 +35,18 @@ const options = {
   timeout: 1000
 };
 
-if(!navigator.geolocation) {
-  messageConsole.textContent = 'Geolocation is not supported by your browser';
-} else {
-  messageConsole.textContent = 'Locating ...';
-  navigator.geolocation.watchPosition(success, error, options);
+const startTracking = () => {
+  if(!navigator.geolocation) {
+    messageConsole.textContent = 'Geolocation is not supported by your browser';
+  } else {
+    messageConsole.textContent = 'Locating ...';
+    navigator.geolocation.watchPosition(success, error, options);
+  }
+}
+
+const stopTracking = () => {
+  path._latlngs =[];
+  path.redraw();
 }
 
 document.querySelector("#message-console")
@@ -59,7 +55,13 @@ document.querySelector("#message-console")
     const { latitude, longitude, timestamp } = event.detail;
     report(`2. Received event | latitude: ${latitude} | longitude: ${longitude} | timestamp: ${timestamp}`);
 
+    if(path._latlngs.length == 1) {    
+      map.setView([latitude, longitude], 15)
+      map.fitBounds(path.getBounds());
+    }
+    
     path._latlngs.push([latitude, longitude]);
+    // console.log('points:', path._latlngs);
     path.redraw();
     report('3. Updated path');
 });
