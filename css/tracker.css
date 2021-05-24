@@ -37,6 +37,10 @@ body,
   background-color: #e8562a;
 }
 
+.button.pause {
+  background-color: #ffc312;
+}
+
 .message-console {
   position: absolute;
   height: 200px;

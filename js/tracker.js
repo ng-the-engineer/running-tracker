@@ -1,5 +1,5 @@
 let map = L.map("tracker").setView([51.505, -0.09], 13); // London center
-
+let isPause = false;
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
   {
@@ -59,9 +59,14 @@ const stopTracking = () => {
   path.redraw();
 }
 
+const pauseTracking = () => {
+  isPause = !isPause;
+}
+
 document.querySelector("#message-console")
 
   .addEventListener("GEO_EVENT", (event) => {
+
     const { latitude, longitude, timestamp } = event.detail;
     report(`2. Received event | latitude: ${latitude} | longitude: ${longitude} | timestamp: ${timestamp}`);
 
@@ -70,12 +75,15 @@ document.querySelector("#message-console")
       // map.setView([latitude, longitude], 15)
     }
     
-    path._latlngs.push([latitude, longitude]);
-    // console.log('points:', path._latlngs);
-    path.redraw();
-    map.fitBounds(path.getBounds());
-    
-    report('3. Updated path');
+    if (isPause === false) { 
+      
+      path._latlngs.push([latitude, longitude]);
+      // console.log('points:', path._latlngs);
+      path.redraw();
+      map.fitBounds(path.getBounds());
+      
+      report('3. Updated path');
+    }
 });
 
 function success(position) {
@@ -84,6 +92,20 @@ function success(position) {
 
   report( `1. Detected at ${timestamp} | ${latitude}, ${longitude}`);
 
+  createNewEvent(latitude, longitude, timestamp);
+}
+
+function error(err) {
+  report(`Unable to retrieve your location! ${err.code} - ${err.message}`)
+}
+
+const report = (message) => {
+  console.log(message);
+  messageConsole.textContent += `\n ${message}`;
+}
+
+const createNewEvent = (latitude, longitude, timestamp) => {
+  
   const geoEvent = new CustomEvent("GEO_EVENT", {
     detail: {
       latitude,
@@ -94,14 +116,6 @@ function success(position) {
     cancelable: true,
     composed: false,
   });
+
   document.querySelector("#message-console").dispatchEvent(geoEvent);
-}
-
-function error(err) {
-  report(`Unable to retrieve your location! ${err.code} - ${err.message}`)
-}
-
-const report = (message) => {
-  console.log(message);
-  messageConsole.textContent += `\n ${message}`;
 }
