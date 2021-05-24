@@ -1,5 +1,6 @@
 let map = L.map("tracker").setView([51.505, -0.09], 13); // London center
-let isPause = false;
+let isStart = null;
+
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
   {
@@ -17,19 +18,13 @@ L.tileLayer(
 
 // Init lines
 let path;
-// let path = L.polyline([
-//   [51.58091697930333,  -0.3427139735019594],
-//   // [51.58086428128717,  -0.3427745343867612]
-// ], {
-//   color: 'red', 
-//   bubblingMouseEvents: true
-// }).addTo(map);
 
 
 // ----------------------------------------------------------------
 // Detect
 // ----------------------------------------------------------------
-const messageConsole = document.querySelector('#message-console');
+// const messageConsole = document.querySelector('#message-console');
+const myConsole = document.querySelector('#my-console');
 const options = {
   enableHighAccuracy: false,
   maximumAge: 1000,
@@ -38,9 +33,11 @@ const options = {
 
 const startTracking = () => {
   if(!navigator.geolocation) {
-    messageConsole.textContent = 'Geolocation is not supported by your browser';
+    // messageConsole.textContent = 'Geolocation is not supported by your browser';
+    myConsole.textContent = 'Geolocation is not supported by your browser';
   } else {
-    messageConsole.textContent = 'Locating ...';
+    // messageConsole.textContent = 'Locating ...';
+    myConsole.textContent = 'Locating ...';
 
     path = L.polyline([
         [51.58091697930333,  -0.3427139735019594],
@@ -59,12 +56,9 @@ const stopTracking = () => {
   path.redraw();
 }
 
-const pauseTracking = () => {
-  isPause = !isPause;
-}
 
-document.querySelector("#message-console")
-
+// document.querySelector("#message-console")
+document.querySelector("#tracker")
   .addEventListener("GEO_EVENT", (event) => {
 
     const { latitude, longitude, timestamp } = event.detail;
@@ -72,11 +66,11 @@ document.querySelector("#message-console")
 
     console.log('path._latlngs=', path._latlngs.length)
     if(path._latlngs.length <= 2) {    
-      // map.setView([latitude, longitude], 15)
+      map.setView([latitude, longitude], 15)
     }
     
-    if (isPause === false) { 
-      
+    if (isStart === true) { 
+
       path._latlngs.push([latitude, longitude]);
       // console.log('points:', path._latlngs);
       path.redraw();
@@ -101,7 +95,8 @@ function error(err) {
 
 const report = (message) => {
   console.log(message);
-  messageConsole.textContent += `\n ${message}`;
+  // messageConsole.textContent += `\n ${message}`;
+  myConsole.innerHTML += `<br /> ${message}`;
 }
 
 const createNewEvent = (latitude, longitude, timestamp) => {
@@ -117,5 +112,17 @@ const createNewEvent = (latitude, longitude, timestamp) => {
     composed: false,
   });
 
-  document.querySelector("#message-console").dispatchEvent(geoEvent);
+  // document.querySelector("#message-console").dispatchEvent(geoEvent);
+  document.querySelector("#tracker").dispatchEvent(geoEvent);
+}
+
+const toggle = () => {
+
+  if (isStart === null) {
+    isStart = true;
+    startTracking();
+  } else {
+    isStart = !isStart;
+    console.log('isStart: ', isStart);
+  }
 }

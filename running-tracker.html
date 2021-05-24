@@ -12,6 +12,11 @@
     crossorigin=""
   />
 
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+
   <script
     src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
@@ -20,17 +25,49 @@
 
   <!-- <link rel="stylesheet" href="./map.css" /> -->
   <link rel="stylesheet" href="./css/tracker.css" />
+  <link rel="stylesheet" href="./css/button.css" />
+  <link rel="stylesheet" href="./css/overlay.css" />
 </head>
 <body>
   <div id="tracker"></div>
-  <div class="center-buttons">
-    <button class="button start" onclick="startTracking()">Start</button>
+  <div class="track-control">
+    <label class="switch">
+      <input type="checkbox" onchange="toggle()" />
+      <span class="slider round"></span>
+    </label>
+  </div>
+  <div class="log-control">
+    <a class="" onclick="openNav()"><i class="fa fa-wrench log"></i></a>
+  </div>
+  <!-- <div class="center-buttons"> -->
+  <!-- <button class="button start" onclick="startTracking()">Start</button>
     <button class="button pause" onclick="pauseTracking()">Pause</button>
-    <button class="button stop" onclick="stopTracking()">Stop</button>
-  </div>
-  <div class="center-container">
+    <button class="button stop" onclick="stopTracking()">Stop</button> -->
+
+  <!-- <label class="switch">
+      <input type="checkbox" onchange="toggle()" />
+      <span class="slider round"></span>
+    </label>
+    <button class="switch button start" onclick="openNav()">Log</button> -->
+
+  <!-- <span class="switch" onclick="openNav()"
+      ><i class="fa fa-wrench log"></i
+    ></span> -->
+  <!-- </div> -->
+  <!-- <div class="center-container">
     <textarea id="message-console" class="message-console"> </textarea>
+  </div> -->
+
+  <div id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+      >&times;</a
+    >
+    <div class="overlay-content">
+      <div id="my-console"></div>
+    </div>
   </div>
+
   <!-- <script src="./map.js"></script> -->
   <script src="./js/tracker.js"></script>
+  <script src="./js/overlay.js"></script>
 </body>

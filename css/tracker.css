@@ -5,24 +5,26 @@ body {
 html,
 body,
 #tracker {
-  height: 85%;
+  height: 100%;
   width: 100vw;
+  z-index: 0;
 }
 
-.center-container {
+/* .center-container {
   height: 10%;
   width: 100vw;
-}
+} */
 
 .center-buttons {
   text-align: center;
   height: 30px;
+  padding-top: 5px;
 }
 
 .button {
   display: inline-block;
   width: 100px;
-  height: 30px;
+  height: 40px;
   border: gray;
   color: #fff;
   /* cursor: pointer; */
@@ -43,8 +45,23 @@ body,
 
 .message-console {
   position: absolute;
+  /* position: relative; */
   height: 200px;
+  /* height: auto; */
   width: 100%;
   background-color: #535c68;
   color: #fff;
+}
+
+.track-control {
+  height: 20px;
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+}
+
+.log-control {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
 }
