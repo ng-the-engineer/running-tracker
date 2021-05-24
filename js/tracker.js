@@ -16,13 +16,14 @@ L.tileLayer(
 
 
 // Init lines
-let path = L.polyline([
-  [51.58091697930333,  -0.3427139735019594],
-  // [51.58086428128717,  -0.3427745343867612]
-], {
-  color: 'red', 
-  bubblingMouseEvents: true
-}).addTo(map);
+let path;
+// let path = L.polyline([
+//   [51.58091697930333,  -0.3427139735019594],
+//   // [51.58086428128717,  -0.3427745343867612]
+// ], {
+//   color: 'red', 
+//   bubblingMouseEvents: true
+// }).addTo(map);
 
 
 // ----------------------------------------------------------------
@@ -40,6 +41,15 @@ const startTracking = () => {
     messageConsole.textContent = 'Geolocation is not supported by your browser';
   } else {
     messageConsole.textContent = 'Locating ...';
+
+    path = L.polyline([
+        [51.58091697930333,  -0.3427139735019594],
+        // [51.58086428128717,  -0.3427745343867612]
+      ], {
+        color: 'red', 
+        bubblingMouseEvents: true
+      }).addTo(map);
+
     navigator.geolocation.watchPosition(success, error, options);
   }
 }
@@ -55,14 +65,16 @@ document.querySelector("#message-console")
     const { latitude, longitude, timestamp } = event.detail;
     report(`2. Received event | latitude: ${latitude} | longitude: ${longitude} | timestamp: ${timestamp}`);
 
-    if(path._latlngs.length == 1) {    
-      map.setView([latitude, longitude], 15)
-      map.fitBounds(path.getBounds());
+    console.log('path._latlngs=', path._latlngs.length)
+    if(path._latlngs.length <= 2) {    
+      // map.setView([latitude, longitude], 15)
     }
     
     path._latlngs.push([latitude, longitude]);
     // console.log('points:', path._latlngs);
     path.redraw();
+    map.fitBounds(path.getBounds());
+    
     report('3. Updated path');
 });
 
