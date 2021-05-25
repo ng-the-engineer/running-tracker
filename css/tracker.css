@@ -45,23 +45,21 @@ body,
 
 .message-console {
   position: absolute;
-  /* position: relative; */
-  height: 200px;
-  /* height: auto; */
+  /* height: 200px; */
   width: 100%;
   background-color: #535c68;
   color: #fff;
+  font-size: 10px;
 }
 
 .track-control {
-  height: 20px;
   position: absolute;
-  bottom: 50px;
-  left: 50px;
+  bottom: 40px;
+  left: 40px;
 }
 
 .log-control {
   position: absolute;
   bottom: 50px;
-  right: 50px;
+  right: 40px;
 }

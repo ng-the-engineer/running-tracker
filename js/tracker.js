@@ -15,16 +15,13 @@ L.tileLayer(
   }
 ).addTo(map);
 
-
 // Init lines
 let path;
-
 
 // ----------------------------------------------------------------
 // Detect
 // ----------------------------------------------------------------
-// const messageConsole = document.querySelector('#message-console');
-const myConsole = document.querySelector('#my-console');
+const logConsole = document.querySelector('#log-console');
 const options = {
   enableHighAccuracy: false,
   maximumAge: 1000,
@@ -33,14 +30,12 @@ const options = {
 
 const startTracking = () => {
   if(!navigator.geolocation) {
-    // messageConsole.textContent = 'Geolocation is not supported by your browser';
-    myConsole.textContent = 'Geolocation is not supported by your browser';
+    logConsole.textContent = 'Geolocation is not supported by your browser';
   } else {
-    // messageConsole.textContent = 'Locating ...';
-    myConsole.textContent = 'Locating ...';
+    logConsole.textContent = 'Locating ...';
 
     path = L.polyline([
-        [51.58091697930333,  -0.3427139735019594],
+        // [51.58091697930333,  -0.3427139735019594],
         // [51.58086428128717,  -0.3427745343867612]
       ], {
         color: 'red', 
@@ -57,24 +52,22 @@ const stopTracking = () => {
 }
 
 
-// document.querySelector("#message-console")
 document.querySelector("#tracker")
   .addEventListener("GEO_EVENT", (event) => {
 
-    const { latitude, longitude, timestamp } = event.detail;
-    report(`2. Received event | latitude: ${latitude} | longitude: ${longitude} | timestamp: ${timestamp}`);
+    const { latitude, longitude } = event.detail;
+    report(`2. Received lat: ${latitude} | lng: ${longitude}`);
 
-    console.log('path._latlngs=', path._latlngs.length)
-    if(path._latlngs.length <= 2) {    
+    if(path._latlngs.length <= 1) {    
       map.setView([latitude, longitude], 15)
+      map.fitBounds(path.getBounds());
     }
     
     if (isStart === true) { 
 
       path._latlngs.push([latitude, longitude]);
-      // console.log('points:', path._latlngs);
       path.redraw();
-      map.fitBounds(path.getBounds());
+      // map.fitBounds(path.getBounds());
       
       report('3. Updated path');
     }
@@ -84,7 +77,7 @@ function success(position) {
   const { latitude, longitude } = position.coords;
   const timestamp = (new Date(Date.now())).toISOString();
 
-  report( `1. Detected at ${timestamp} | ${latitude}, ${longitude}`);
+  report( `1. Detected at ${timestamp}`);
 
   createNewEvent(latitude, longitude, timestamp);
 }
@@ -94,9 +87,7 @@ function error(err) {
 }
 
 const report = (message) => {
-  console.log(message);
-  // messageConsole.textContent += `\n ${message}`;
-  myConsole.innerHTML += `<br /> ${message}`;
+  logConsole.innerHTML += `<br /> ${message}`;
 }
 
 const createNewEvent = (latitude, longitude, timestamp) => {
@@ -112,7 +103,6 @@ const createNewEvent = (latitude, longitude, timestamp) => {
     composed: false,
   });
 
-  // document.querySelector("#message-console").dispatchEvent(geoEvent);
   document.querySelector("#tracker").dispatchEvent(geoEvent);
 }
 
@@ -125,4 +115,5 @@ const toggle = () => {
     isStart = !isStart;
     console.log('isStart: ', isStart);
   }
+
 }
