@@ -1,6 +1,13 @@
 let map = L.map("tracker").setView(LONDON_CENTRE_LAT_LNG, 13);
-let isStart = null;
-let path = null;
+
+// ----------------------------------------------------------------
+// Config
+// ----------------------------------------------------------------
+const trackOptions = {
+  enableHighAccuracy: HIGH_ACCURACY,
+  maximumAge: MAX_CACHE_AGE_MILLISECOND,
+  timeout: MAX_NEW_POSITION_MILLISECOND,
+};
 
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -17,15 +24,15 @@ L.tileLayer(
 ).addTo(map);
 
 
+let isStart = null;
+let path = null;
+let accumulatedDistance = 0;
+
 // ----------------------------------------------------------------
 // Detect
 // ----------------------------------------------------------------
 const logConsole = document.querySelector('#log-console');
-const options = {
-  enableHighAccuracy: HIGH_ACCURACY,
-  maximumAge: MAX_CACHE_AGE_MILLISECOND,
-  timeout: MAX_NEW_POSITION_MILLISECOND,
-};
+
 
 const startTracking = () => {
   if(!navigator.geolocation) {
@@ -33,15 +40,14 @@ const startTracking = () => {
   } else {
     logConsole.textContent = 'Locating ...';
 
-    return navigator.geolocation.watchPosition(success, error, options);
+    return navigator.geolocation.watchPosition(success, error, trackOptions);
   }
 }
 
-const stopTracking = () => {
-  path._latlngs =[];
-  path.redraw();
-}
-
+// const stopTracking = () => {
+//   path._latlngs =[];
+//   path.redraw();
+// }
 
 document.querySelector("#tracker")
   .addEventListener("GEO_EVENT", (event) => {
@@ -52,14 +58,14 @@ document.querySelector("#tracker")
       path = L.polyline([
         [ latitude, longitude ],
       ], {
-        color: 'red', 
+        color: '#fbc531', 
         bubblingMouseEvents: true
       }).addTo(map);
 
       map.setView([latitude, longitude], 15)
       map.fitBounds(path.getBounds());
 
-      var marker = L.marker([latitude, longitude]).addTo(map);
+      const marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>Start at ${timestamp}</b>`);
 
     } else {
@@ -68,9 +74,11 @@ document.querySelector("#tracker")
 
         path._latlngs.push([latitude, longitude]);
         path.redraw();
-        // map.fitBounds(path.getBounds());
-        
-        report('3. Updated path');
+
+        const delta = calculateDelta(path._latlngs)
+        accumulatedDistance =  delta + accumulatedDistance;
+
+        report(`3. Updated path with ${delta} km | accumulatedDistance = ${accumulatedDistance}`);
       }
     }
 });
@@ -88,9 +96,7 @@ const error = (err) => report(`Unable to retrieve your location! ${err.code} - $
 
 const report = (message) => logConsole.innerHTML += `<br /> ${message}`;
 
-
 const createNewEvent = (latitude, longitude, timestamp) => {
-  
   const geoEvent = new CustomEvent("GEO_EVENT", {
     detail: {
       latitude,
@@ -101,18 +107,28 @@ const createNewEvent = (latitude, longitude, timestamp) => {
     cancelable: true,
     composed: false,
   });
-
   document.querySelector("#tracker").dispatchEvent(geoEvent);
 }
 
 const toggle = () => {
-
   if (isStart === null) {
     isStart = true;
     startTracking();
   } else {
     isStart = !isStart;
-    console.log('isStart: ', isStart);
   }
+}
 
+const calculateDelta = (track) => {
+  // Ignore the first object in the path array
+  if (track.length >= 3) {
+    const newIndex = track.length - 1;
+    const newLatLng = track[newIndex];
+    const lastLatLng = track[newIndex - 1];
+    const latitude = 0;
+    const longitude = 1;
+    return distance(newLatLng[latitude], newLatLng[longitude], lastLatLng[latitude], lastLatLng[longitude], 'K');
+  } else {
+    return 0;
+  }
 }

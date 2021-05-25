@@ -35,8 +35,8 @@
 }
 
 .overlay .closebtn {
-  position: absolute;
-  right: 25px;
+  text-align: right;
+  padding-right: 25px;
   font-size: 30px;
 }
 
@@ -44,14 +44,10 @@
   color: #f1f1f1;
 }
 
-@media screen and (max-height: 450px) {
-  .overlay a {
-    font-size: 12px;
-    color: red;
-  }
-  .overlay .closebtn {
-    font-size: 40px;
-    top: 15px;
-    right: 35px;
-  }
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  right: 100px;
+  z-index: 5;
 }
