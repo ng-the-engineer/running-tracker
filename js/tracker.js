@@ -1,10 +1,3 @@
-const LONDON_CENTRE_LAT_LNG = [51.505, -0.09]
-const HIGH_ACCURACY = true;
-const LOW_ACCURACY = false;
-const MAX_CACHE_AGE_MILLISECOND = 30000;
-const MAX_NEW_POSITION_MILLISECOND = 5000;
-
-
 let map = L.map("tracker").setView(LONDON_CENTRE_LAT_LNG, 13);
 let isStart = null;
 let path = null;
@@ -52,12 +45,8 @@ const stopTracking = () => {
 
 document.querySelector("#tracker")
   .addEventListener("GEO_EVENT", (event) => {
-
-    const { latitude, longitude, accuracy, altitude, altitudeAccuracy, heading, speed } = event.detail;
-    report(`2. Received lat: ${latitude} | lng: ${longitude} | accuracy: ${accuracy} | altitudeAccuracy ${altitudeAccuracy} | heading: ${heading} | speed: ${speed}`);
-
-    // console.log('points = ', path._latlngs.length);
-    // console.log('path.getBounds() =' , path.getBounds())
+    const { latitude, longitude, timestamp, accuracy, altitude, altitudeAccuracy, heading, speed } = event.detail;
+    report(`2. Received lat: ${latitude} | lng: ${longitude} | accuracy: ${accuracy} | altitude: ${altitude} | altitudeAccuracy ${altitudeAccuracy} | heading: ${heading} | speed: ${speed}`);
 
     if (path === null) {
       path = L.polyline([
@@ -69,12 +58,11 @@ document.querySelector("#tracker")
 
       map.setView([latitude, longitude], 15)
       map.fitBounds(path.getBounds());
-    } else {
 
-    // if(path._latlngs.length === 1) {    
-      // map.setView([latitude, longitude], 15)
-      // map.fitBounds(path.getBounds());
-    //}
+      var marker = L.marker([latitude, longitude]).addTo(map);
+      marker.bindPopup(`<b>Start at ${timestamp}</b>`);
+
+    } else {
     
       if (isStart === true) { 
 
@@ -87,7 +75,7 @@ document.querySelector("#tracker")
     }
 });
 
-function success(position) {
+const success = (position) => {
   const { latitude, longitude } = position.coords;
   const timestamp = (new Date(Date.now())).toISOString();
 
@@ -96,13 +84,10 @@ function success(position) {
   createNewEvent(latitude, longitude, timestamp);
 }
 
-function error(err) {
-  report(`Unable to retrieve your location! ${err.code} - ${err.message}`)
-}
+const error = (err) => report(`Unable to retrieve your location! ${err.code} - ${err.message}`);
 
-const report = (message) => {
-  logConsole.innerHTML += `<br /> ${message}`;
-}
+const report = (message) => logConsole.innerHTML += `<br /> ${message}`;
+
 
 const createNewEvent = (latitude, longitude, timestamp) => {
   
