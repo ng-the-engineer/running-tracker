@@ -1,5 +1,6 @@
 let map = L.map("tracker").setView([51.505, -0.09], 13); // London center
 let isStart = null;
+let path = null;
 
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -15,8 +16,6 @@ L.tileLayer(
   }
 ).addTo(map);
 
-// Init lines
-let path;
 
 // ----------------------------------------------------------------
 // Detect
@@ -34,14 +33,6 @@ const startTracking = () => {
   } else {
     logConsole.textContent = 'Locating ...';
 
-    // path = L.polyline([
-    //     [51.58091697930333,  -0.3427139735019594],
-    //     // [51.58086428128717,  -0.3427745343867612]
-    //   ], {
-    //     color: 'red', 
-    //     bubblingMouseEvents: true
-    //   }).addTo(map);
-
     navigator.geolocation.watchPosition(success, error, options);
   }
 }
@@ -58,8 +49,8 @@ document.querySelector("#tracker")
     const { latitude, longitude } = event.detail;
     report(`2. Received lat: ${latitude} | lng: ${longitude}`);
 
-    console.log('points = ', path._latlngs.length);
-    console.log('path.getBounds() =' , path.getBounds())
+    // console.log('points = ', path._latlngs.length);
+    // console.log('path.getBounds() =' , path.getBounds())
 
     if (path === null) {
       path = L.polyline([
@@ -70,6 +61,7 @@ document.querySelector("#tracker")
       }).addTo(map);
 
       map.setView([latitude, longitude], 15)
+      map.fitBounds(path.getBounds());
     } else {
 
     // if(path._latlngs.length === 1) {    
