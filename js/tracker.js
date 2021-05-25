@@ -58,9 +58,12 @@ document.querySelector("#tracker")
     const { latitude, longitude } = event.detail;
     report(`2. Received lat: ${latitude} | lng: ${longitude}`);
 
-    if(path._latlngs.length <= 1) {    
+    console.log('points = ', path._latlngs.length);
+    console.log('path.getBounds() =' , path.getBounds())
+
+    if(path._latlngs.length === 1) {    
       map.setView([latitude, longitude], 15)
-      map.fitBounds(path.getBounds());
+      // map.fitBounds(path.getBounds());
     }
     
     if (isStart === true) { 
