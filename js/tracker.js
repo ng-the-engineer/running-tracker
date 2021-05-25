@@ -34,13 +34,13 @@ const startTracking = () => {
   } else {
     logConsole.textContent = 'Locating ...';
 
-    path = L.polyline([
-        [51.58091697930333,  -0.3427139735019594],
-        // [51.58086428128717,  -0.3427745343867612]
-      ], {
-        color: 'red', 
-        bubblingMouseEvents: true
-      }).addTo(map);
+    // path = L.polyline([
+    //     [51.58091697930333,  -0.3427139735019594],
+    //     // [51.58086428128717,  -0.3427745343867612]
+    //   ], {
+    //     color: 'red', 
+    //     bubblingMouseEvents: true
+    //   }).addTo(map);
 
     navigator.geolocation.watchPosition(success, error, options);
   }
@@ -61,18 +61,30 @@ document.querySelector("#tracker")
     console.log('points = ', path._latlngs.length);
     console.log('path.getBounds() =' , path.getBounds())
 
-    if(path._latlngs.length === 1) {    
-      map.setView([latitude, longitude], 15)
-      // map.fitBounds(path.getBounds());
-    }
-    
-    if (isStart === true) { 
+    if (path === null) {
+      path = L.polyline([
+        [ latitude, longitude ],
+      ], {
+        color: 'red', 
+        bubblingMouseEvents: true
+      }).addTo(map);
 
-      path._latlngs.push([latitude, longitude]);
-      path.redraw();
+      map.setView([latitude, longitude], 15)
+    } else {
+
+    // if(path._latlngs.length === 1) {    
+      // map.setView([latitude, longitude], 15)
       // map.fitBounds(path.getBounds());
-      
-      report('3. Updated path');
+    //}
+    
+      if (isStart === true) { 
+
+        path._latlngs.push([latitude, longitude]);
+        path.redraw();
+        // map.fitBounds(path.getBounds());
+        
+        report('3. Updated path');
+      }
     }
 });
 
