@@ -1,4 +1,11 @@
-let map = L.map("tracker").setView([51.505, -0.09], 13); // London center
+const LONDON_CENTRE_LAT_LNG = [51.505, -0.09]
+const HIGH_ACCURACY = true;
+const LOW_ACCURACY = false;
+const MAX_CACHE_AGE_MILLISECOND = 30000;
+const MAX_NEW_POSITION_MILLISECOND = 5000;
+
+
+let map = L.map("tracker").setView(LONDON_CENTRE_LAT_LNG, 13);
 let isStart = null;
 let path = null;
 
@@ -22,9 +29,9 @@ L.tileLayer(
 // ----------------------------------------------------------------
 const logConsole = document.querySelector('#log-console');
 const options = {
-  enableHighAccuracy: false,
-  maximumAge: 1000,
-  timeout: 1000
+  enableHighAccuracy: HIGH_ACCURACY,
+  maximumAge: MAX_CACHE_AGE_MILLISECOND,
+  timeout: MAX_NEW_POSITION_MILLISECOND,
 };
 
 const startTracking = () => {
@@ -33,7 +40,7 @@ const startTracking = () => {
   } else {
     logConsole.textContent = 'Locating ...';
 
-    navigator.geolocation.watchPosition(success, error, options);
+    return navigator.geolocation.watchPosition(success, error, options);
   }
 }
 
@@ -46,8 +53,8 @@ const stopTracking = () => {
 document.querySelector("#tracker")
   .addEventListener("GEO_EVENT", (event) => {
 
-    const { latitude, longitude } = event.detail;
-    report(`2. Received lat: ${latitude} | lng: ${longitude}`);
+    const { latitude, longitude, accuracy, altitude, altitudeAccuracy, heading, speed } = event.detail;
+    report(`2. Received lat: ${latitude} | lng: ${longitude} | accuracy: ${accuracy} | altitudeAccuracy ${altitudeAccuracy} | heading: ${heading} | speed: ${speed}`);
 
     // console.log('points = ', path._latlngs.length);
     // console.log('path.getBounds() =' , path.getBounds())
