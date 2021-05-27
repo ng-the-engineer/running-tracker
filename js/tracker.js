@@ -28,6 +28,8 @@ let isStart = null;
 let path = null;
 let accumulatedDistance = 0;
 
+let currentMarker = null;
+
 // ----------------------------------------------------------------
 // Detect
 // ----------------------------------------------------------------
@@ -68,12 +70,16 @@ document.querySelector("#tracker")
       const marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>Start at ${timestamp}</b>`);
 
+      currentMarker = L.marker([latitude, longitude]).addTo(map);
+      currentMarker.bindPopup(`Current at ${timestamp}`)
     } else {
     
       if (isStart === true) { 
 
         path._latlngs.push([latitude, longitude]);
         path.redraw();
+
+        currentMarker.setLatLng(new L.LatLng(latitude, longitude));
 
         const delta = calculateDelta(path._latlngs)
         accumulatedDistance =  delta + accumulatedDistance;
