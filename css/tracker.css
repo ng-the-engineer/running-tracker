@@ -60,13 +60,13 @@ body,
 
 .log-control {
   position: absolute;
-  bottom: 50px;
+  bottom: 40px;
   right: 40px;
 }
 
 .meter-control {
   position: absolute;
-  bottom: 50px;
+  bottom: 40px;
   left: 50%;
   transform: translate(-50%, 0);
   -ms-transform: translate(-50%, 0);
