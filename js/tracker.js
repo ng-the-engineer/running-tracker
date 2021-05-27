@@ -34,6 +34,8 @@ let currentMarker = null;
 // Detect
 // ----------------------------------------------------------------
 const logConsole = document.querySelector('#log-console');
+const distanceBox = document.querySelector('#distance-box');
+
 
 
 const startTracking = () => {
@@ -41,6 +43,7 @@ const startTracking = () => {
     logConsole.textContent = 'Geolocation is not supported by your browser';
   } else {
     logConsole.textContent = 'Locating ...';
+    distanceBox.textContent = '0.000';
 
     return navigator.geolocation.watchPosition(success, error, trackOptions);
   }
@@ -83,6 +86,8 @@ document.querySelector("#tracker")
 
         const delta = calculateDelta(path._latlngs)
         accumulatedDistance =  delta + accumulatedDistance;
+
+        distanceBox.textContent = (round(accumulatedDistance, 3)).toLocaleString('en-US', { minimumFractionDigits: 3 });
 
         report(`3. Updated path with ${delta} km | accumulatedDistance = ${accumulatedDistance}`);
       }
@@ -137,4 +142,8 @@ const calculateDelta = (track) => {
   } else {
     return 0;
   }
+}
+
+const round = (num, places) => {
+	return +(parseFloat(num).toFixed(places));
 }

@@ -63,3 +63,33 @@ body,
   bottom: 50px;
   right: 40px;
 }
+
+.meter-control {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, 0);
+}
+
+.meter-look {
+  background-color: black;
+  color: white;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.glow {
+  font-size: 25px;
+  color: #fff;
+  text-align: center;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #6ab04c, 0 0 40px #6ab04c, 0 0 50px #6ab04c, 0 0 60px #6ab04c, 0 0 70px #6ab04c;
+  }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #badc58, 0 0 40px #badc58, 0 0 50px #badc58, 0 0 60px #badc58, 0 0 70px #badc58, 0 0 80px #badc58;
