@@ -111,7 +111,7 @@ const drawNewSegment = (detail) => {
 
       map.setView([latitude, longitude], 15)
       map.fitBounds(path.getBounds());
-
+      console.log('drawNewSegment init')
     } else {
 
       if (isStart === true) {
@@ -129,19 +129,28 @@ const drawNewMarker = (detail) => {
   const { latitude, longitude } = detail;
 
   return new Promise((resolve, reject) => {
-    if (path === null) {
+    // if (path === null) {
 
+    //   const marker = L.marker([latitude, longitude]).addTo(map);
+    //   marker.bindPopup(`<b>Start at ${timestamp}</b>`);
+
+    //   currentMarker = L.marker([latitude, longitude]).addTo(map);
+    //   currentMarker.bindPopup(`Current at ${timestamp}`)
+    //   console.log('drawNewMarker init')
+    // } else {
+
+    if (!isStart) return (resolve(detail))
+
+    if (currentMarker == null) {
       const marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>Start at ${timestamp}</b>`);
 
       currentMarker = L.marker([latitude, longitude]).addTo(map);
-      currentMarker.bindPopup(`Current at ${timestamp}`)
-
     } else {
-      if (isStart === true) { 
-        currentMarker.setLatLng(new L.LatLng(latitude, longitude));
-      }
+      currentMarker.bindPopup(`Current at ${timestamp}`)
+      currentMarker.setLatLng(new L.LatLng(latitude, longitude));
     }
+    // }
 
     return resolve(detail);
   })
