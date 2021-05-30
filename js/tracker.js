@@ -126,7 +126,7 @@ const drawNewSegment = (detail) => {
 }
 
 const drawNewMarker = (detail) => {
-  const { latitude, longitude } = detail;
+  const { latitude, longitude, timestamp } = detail;
 
   return new Promise((resolve, reject) => {
     // if (path === null) {
