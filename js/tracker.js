@@ -54,36 +54,103 @@ const startTracking = () => {
 //   path.redraw();
 // }
 
-document.querySelector("#tracker")
-  .addEventListener("GEO_EVENT", (event) => {
-    const { latitude, longitude, timestamp, accuracy, altitude, altitudeAccuracy, heading, speed } = event.detail;
+const updateMap = (event) => {
+  const { latitude, longitude, timestamp, accuracy, altitude, altitudeAccuracy, heading, speed } = event.detail;
     report(`2. Received lat: ${latitude} | lng: ${longitude} | accuracy: ${accuracy} | altitude: ${altitude} | altitudeAccuracy ${altitudeAccuracy} | heading: ${heading} | speed: ${speed}`);
 
+    drawNewSegment(event.detail)
+      .then((detail) => drawNewMarker(detail))
+      .then((detail) => refreshMeter(detail))
+    // if (path === null) {
+    //   path = L.polyline([
+    //     [ latitude, longitude ],
+    //   ], {
+    //     color: '#fbc531',
+    //     bubblingMouseEvents: true
+    //   }).addTo(map);
+
+    //   map.setView([latitude, longitude], 15)
+    //   map.fitBounds(path.getBounds());
+
+    //   const marker = L.marker([latitude, longitude]).addTo(map);
+    //   marker.bindPopup(`<b>Start at ${timestamp}</b>`);
+
+    //   currentMarker = L.marker([latitude, longitude]).addTo(map);
+    //   currentMarker.bindPopup(`Current at ${timestamp}`)
+    // } else {
+
+    //   if (isStart === true) {
+
+    //     path._latlngs.push([latitude, longitude]);
+    //     path.redraw();
+
+    //     currentMarker.setLatLng(new L.LatLng(latitude, longitude));
+
+    //     const delta = calculateDelta(path._latlngs)
+    //     accumulatedDistance =  delta + accumulatedDistance;
+
+    //     distanceBox.textContent = (round(accumulatedDistance, 3)).toLocaleString('en-US', { minimumFractionDigits: 3 });
+
+    //     report(`3. Updated path with ${delta} km | accumulatedDistance = ${accumulatedDistance}`);
+    //   }
+    // }
+}
+
+const drawNewSegment = (detail) => {
+  const { latitude, longitude } = detail;
+
+  return new Promise(() => {
     if (path === null) {
+
       path = L.polyline([
         [ latitude, longitude ],
       ], {
-        color: '#fbc531', 
+        color: '#fbc531',
         bubblingMouseEvents: true
       }).addTo(map);
 
       map.setView([latitude, longitude], 15)
       map.fitBounds(path.getBounds());
 
+    } else {
+
+      if (isStart === true) {
+        path._latlngs.push([latitude, longitude]);
+        path.redraw();
+      }
+
+    }
+
+    return resolve(detail);
+  })
+}
+
+const drawNewMarker = (detail) => {
+  const { latitude, longitude } = detail;
+
+  return new Promise(() => {
+    if (path === null) {
+
       const marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>Start at ${timestamp}</b>`);
 
       currentMarker = L.marker([latitude, longitude]).addTo(map);
       currentMarker.bindPopup(`Current at ${timestamp}`)
+
     } else {
-    
       if (isStart === true) { 
-
-        path._latlngs.push([latitude, longitude]);
-        path.redraw();
-
         currentMarker.setLatLng(new L.LatLng(latitude, longitude));
+      }
+    }
 
+    return resolve(detail);
+  })
+}
+
+const refreshMeter = (detail) => {
+  return new Promise(() => {
+    if (path !== null) {
+      if (isStart === true) {
         const delta = calculateDelta(path._latlngs)
         accumulatedDistance =  delta + accumulatedDistance;
 
@@ -92,7 +159,14 @@ document.querySelector("#tracker")
         report(`3. Updated path with ${delta} km | accumulatedDistance = ${accumulatedDistance}`);
       }
     }
-});
+
+    return resolve(detail);
+  })
+}
+
+
+document.querySelector("#tracker")
+  .addEventListener("GEO_EVENT", updateMap);
 
 const success = (position) => {
   const { latitude, longitude } = position.coords;
