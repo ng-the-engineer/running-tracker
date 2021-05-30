@@ -99,7 +99,7 @@ const updateMap = (event) => {
 const drawNewSegment = (detail) => {
   const { latitude, longitude } = detail;
 
-  return new Promise(() => {
+  return new Promise((resolve, reject) => {
     if (path === null) {
 
       path = L.polyline([
@@ -128,7 +128,7 @@ const drawNewSegment = (detail) => {
 const drawNewMarker = (detail) => {
   const { latitude, longitude } = detail;
 
-  return new Promise(() => {
+  return new Promise((resolve, reject) => {
     if (path === null) {
 
       const marker = L.marker([latitude, longitude]).addTo(map);
@@ -148,7 +148,7 @@ const drawNewMarker = (detail) => {
 }
 
 const refreshMeter = (detail) => {
-  return new Promise(() => {
+  return new Promise((resolve, reject) => {
     if (path !== null) {
       if (isStart === true) {
         const delta = calculateDelta(path._latlngs)
