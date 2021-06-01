@@ -1,8 +1,11 @@
 let map = L.map("tracker").setView(LONDON_CENTRE_LAT_LNG, 13);
+let isStart = null;
+let path = null;
+let accumulatedDistance = 0;
+let currentMarker = null;
+const logConsole = document.querySelector('#log-console');
+const distanceBox = document.querySelector('#distance-box');
 
-// ----------------------------------------------------------------
-// Config
-// ----------------------------------------------------------------
 const trackOptions = {
   enableHighAccuracy: HIGH_ACCURACY,
   maximumAge: MAX_CACHE_AGE_MILLISECOND,
@@ -22,21 +25,6 @@ L.tileLayer(
       "pk.eyJ1IjoibTQxaGlnaHdheSIsImEiOiJja295ZjQya2wwaTkxMnFtY203Z21wNjhzIn0.uF1S6TqlDfW7wmQ17Kp4NQ",
   }
 ).addTo(map);
-
-
-let isStart = null;
-let path = null;
-let accumulatedDistance = 0;
-
-let currentMarker = null;
-
-// ----------------------------------------------------------------
-// Detect
-// ----------------------------------------------------------------
-const logConsole = document.querySelector('#log-console');
-const distanceBox = document.querySelector('#distance-box');
-
-
 
 const startTracking = () => {
   if(!navigator.geolocation) {
@@ -59,7 +47,6 @@ const updateMap = (event) => {
     .then((detail) => drawNewMarker(detail))
     .then((detail) => refreshMeter(detail))
 }
-
 
 const drawNewSegment = (detail) => {
   
@@ -131,10 +118,6 @@ const refreshMeter = (detail) => {
   })
 }
 
-
-document.querySelector("#tracker")
-  .addEventListener("GEO_EVENT", updateMap);
-
 const success = (position) => {
   const { latitude, longitude } = position.coords;
   const timestamp = (new Date(Date.now())).toISOString();
@@ -188,3 +171,6 @@ const calculateDelta = (track) => {
 const round = (num, places) => {
 	return +(parseFloat(num).toFixed(places));
 }
+
+document.querySelector("#tracker")
+  .addEventListener("GEO_EVENT", updateMap);
