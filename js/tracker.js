@@ -120,17 +120,12 @@ const refreshMeter = (detail) => {
 
     if (!isStart) return resolve(detail);
 
-    // if (isStart === true) {
-      const delta = calculateDelta(path._latlngs)
-      // accumulatedDistance =  delta + accumulatedDistance;
-      accumulatedDistance += delta;
+    const delta = calculateDelta(path._latlngs)
+    accumulatedDistance += delta;
 
-      const formattedDistance = (round(accumulatedDistance, 3)).toLocaleString('en-US', { minimumFractionDigits: 3 })
-
-      distanceBox.textContent = formattedDistance;
-
-      report(`3. Updated path with ${delta} km | accumulatedDistance = ${formattedDistance}`);
-    // }
+    const formattedDistance = (round(accumulatedDistance, 3)).toLocaleString('en-US', { minimumFractionDigits: 3 })
+    distanceBox.textContent = formattedDistance;
+    report(`3. Updated path with ${delta} km | accumulatedDistance = ${formattedDistance}`);
 
     return resolve(detail);
   })
