@@ -1,5 +1,7 @@
 # Running Tracker
 
+![Landing page](./images/thumbnail.png)
+
 This repository is for the tutorial [Make a running tracker with Geolocation API]() on Medium. 🔥
 
 [Demo on YouTube](https://www.youtube.com/watch?v=Un9sFEMaWf8)
