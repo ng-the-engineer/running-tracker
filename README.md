@@ -2,6 +2,8 @@
 
 This repository is for the tutorial [Make a running tracker with Geolocation API]() on Medium. 🔥
 
+[Demo on YouTube](https://www.youtube.com/watch?v=Un9sFEMaWf8)
+
 ## To run the web app
 
 - Access https://ng-the-engineer.github.io/running-tracker/index.html in browser.
