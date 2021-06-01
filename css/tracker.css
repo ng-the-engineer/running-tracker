@@ -10,11 +10,6 @@ body,
   z-index: 0;
 }
 
-/* .center-container {
-  height: 10%;
-  width: 100vw;
-} */
-
 .center-buttons {
   text-align: center;
   height: 30px;
@@ -27,7 +22,6 @@ body,
   height: 40px;
   border: gray;
   color: #fff;
-  /* cursor: pointer; */
   font-weight: bold;
 }
 
@@ -45,7 +39,6 @@ body,
 
 .message-console {
   position: absolute;
-  /* height: 200px; */
   width: 100%;
   background-color: #535c68;
   color: #fff;
